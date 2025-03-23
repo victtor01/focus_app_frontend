@@ -1,0 +1,11 @@
+.background {
+  background-image: radial-gradient(
+      49% 81% at 45% 47%,
+      #5521B5 0%,
+      transparent 100%
+    ),
+    radial-gradient(113% 91% at 17% -2%, #5850EC 1%, #ff000000 99%),
+    radial-gradient(142% 91% at 83% 7%, oklch(0.514 0.222 16.935) 1%, #ff000000 99%),
+    radial-gradient(142% 91% at -6% 74%, #5521B5 1%, #ff000000 99%),
+    radial-gradient(142% 91% at 111% 84%, #6C2BD9 0%, #5521B5 100%);
+}

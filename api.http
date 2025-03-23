@@ -1,0 +1,51 @@
+@HOST = http://localhost:8080
+
+POST {{HOST}}/users
+Content-Type: application/json
+
+{
+  "username": "example",
+  "email": "example@gmail.com",
+  "password": "example"
+}
+
+###
+POST {{HOST}}/auth
+Content-Type: application/json
+
+{
+  "email": "user2@gmail.com",
+  "password": "123456"
+}
+
+###
+GET {{HOST}}/users/i
+
+###
+POST {{HOST}}/tasks
+Content-Type: application/json
+
+{
+  "name": "teste",
+  "description": "testetetet"
+}
+
+###
+GET {{HOST}}/tasks
+
+###
+DELETE {{HOST}}/tasks/b32453f3-5ed8-4803-ac7e-0319a56e3049
+
+###
+POST {{HOST}}/reminders HTTP/1.1
+Content-Type: application/json
+
+{
+  "reminderTime": "2025-03-23T14:30:00",
+  "daysOfWeek": ["MONDAY", "WEDNESDAY", "FRIDAY"],
+  "taskId": "75ef1e4a-c85d-4f6f-8dc2-46b4ba874d57"
+}
+
+###
+
+GET {{HOST}}/reminders HTTP/1.1
