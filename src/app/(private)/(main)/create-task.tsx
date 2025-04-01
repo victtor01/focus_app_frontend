@@ -20,10 +20,10 @@ const FormCreateTask = () => {
 function CreateTask(_: ModalProps) {
   return (
     <modal.background>
-      <modal.container className="p-4 rounded-md max-w-[30rem] my-[10rem]">
+      <modal.form className="p-4 rounded-md max-w-[30rem] my-[10rem]">
         <modal.header className="p-0" title="Criar nova task" />
         <FormCreateTask />
-      </modal.container>
+      </modal.form>
     </modal.background>
   );
 }

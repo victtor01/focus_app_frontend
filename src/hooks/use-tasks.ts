@@ -14,8 +14,21 @@ const useAllTasks = () => {
   };
 };
 
+const useFindById = (taskId: string) => {
+  const { data: task, isLoading } = useQuery<ITask>({
+    queryKey: ["tasks", taskId],
+    queryFn: async () => (await api.get(`/tasks/${taskId}`))?.data,
+  });
+
+  return {
+    task,
+    isLoading,
+  };
+};
+
 export const useTasks = () => {
   return {
     useAllTasks,
+    useFindById,
   };
 };

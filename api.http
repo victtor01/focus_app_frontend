@@ -26,12 +26,17 @@ POST {{HOST}}/tasks
 Content-Type: application/json
 
 {
-  "name": "FF",
-  "description": "teste"
+  "name": "COMMIT",
+  "description": "test",
+  "categoriesIds": ["7e219a66-f27c-4913-9caf-2dbd6dcb08c1"]
 }
 
 ###
 GET {{HOST}}/tasks
+
+###
+
+GET {{HOST}}/tasks/6adf5364-3137-4097-bfbc-e371e5700e67
 
 ###
 DELETE {{HOST}}/tasks/b32453f3-5ed8-4803-ac7e-0319a56e3049
@@ -41,9 +46,10 @@ POST {{HOST}}/reminders HTTP/1.1
 Content-Type: application/json
 
 {
-  "reminderTime": "2025-03-23T14:30:00",
-  "daysOfWeek": ["MONDAY", "WEDNESDAY", "FRIDAY"],
-  "taskId": "75ef1e4a-c85d-4f6f-8dc2-46b4ba874d57"
+  "customReminderDates": ["2025-03-26", "2025-03-25"],
+  "reminderDaysOfWeek": ["2025-03-26", "2025-03-25"],
+  "reminderType": "WEEKLY",
+  "taskId": "6adf5364-3137-4097-bfbc-e371e5700e67"
 }
 
 ###
@@ -68,3 +74,17 @@ GET {{HOST}}/tasks-log/list?start=2025-01-01&end=2025-12-12 HTTP/1.1
 ###
 
 GET {{HOST}}/tasks-log/2025-03-26
+
+###
+
+POST {{HOST}}/categories HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "first",
+  "color": "label-blue-1"
+}
+
+###
+
+GET {{HOST}}/categories HTTP/1.1

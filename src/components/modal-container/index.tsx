@@ -1,6 +1,6 @@
 "use client";
 
-import { fontSaira } from "@/utils/fonts";
+import { fontOpenSans, fontSaira } from "@/utils/fonts";
 import Link from "next/link";
 import React, { HTMLAttributes } from "react";
 import { twMerge } from "tailwind-merge";
@@ -13,16 +13,16 @@ interface ModalFormProps extends HTMLAttributes<HTMLFormElement> {}
 const ModalBackground = (props: ModalDefaultProps) => {
   const { children, className } = props;
   const style = twMerge(
-    "fixed top-0 left-0 w-full h-screen overflow-auto px-4 flex flex-col bg-indigo-50 dark:bg-zinc-900/80 backdrop-blur-[1px] z-20",
+    "fixed top-0 left-0 w-full h-screen overflow-auto px-4 flex flex-col bg-gray-50 dark:bg-zinc-950 backdrop-blur-[1px] z-20",
     className
   );
 
   return (
     <motion.div
       transition={{ type: "keyframes", duration: 0.1 }}
-      initial={{ opacity: 0, scale: 1 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 1 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
       className={style}
     >
       {children}
@@ -33,7 +33,7 @@ const ModalBackground = (props: ModalDefaultProps) => {
 const ModalContainer = (props: ModalFormProps) => {
   const { children, className, ...rest } = props;
   const style = twMerge(
-    " w-full overflow-auto flex flex-col w-full max-w-[20rem] bg-white dark:bg-zinc-800 m-auto",
+    " w-full flex flex-col w-full max-w-[20rem] h-auto bg-white dark:bg-zinc-900 m-auto",
     className
   );
 
@@ -53,7 +53,7 @@ const ModalHeader = (props: ModalDefaultProps & { title?: string }) => {
 
   return (
     <header className={style}>
-      <div className="text-lg">
+      <div className={`${fontOpenSans} text-lg`}>
         <h1 className={fontSaira}>{title}</h1>
       </div>
       <Link href="?">close</Link>
@@ -63,7 +63,7 @@ const ModalHeader = (props: ModalDefaultProps & { title?: string }) => {
 
 const modal = {
   background: ModalBackground,
-  container: ModalContainer,
+  form: ModalContainer,
   header: ModalHeader,
 };
 

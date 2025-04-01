@@ -3,20 +3,23 @@
 import { ButtonTheme } from "@/components/button-theme";
 import { CenterSection } from "@/components/center-section";
 import { fontSaira } from "@/utils/fonts";
+import { Pages } from "@/utils/page";
+import { AnimatePresence, motion, MotionProps } from "framer-motion";
 import Link from "next/link";
-import { FaRocket } from "react-icons/fa";
-import { TbClockHour3Filled } from "react-icons/tb";
+import { usePathname, useSearchParams } from "next/navigation";
 import { CreateTask } from "./create-task";
-import { useSearchParams } from "next/navigation";
-import { AnimatePresence, MotionProps } from "framer-motion";
-import { motion } from "framer-motion";
-import { CgGoogleTasks } from "react-icons/cg";
+import { EditTask } from "./edit-task";
+
+export type ModalType = keyof typeof MODALS;
 
 interface LayoutMainProps {
   children: React.ReactNode;
 }
 
-export type ModalType = keyof typeof MODALS;
+const MODALS = {
+  "create-task": CreateTask,
+  "edit-task": EditTask,
+};
 
 const animations = {
   initial: { opacity: 0, scale: 0.8 },
@@ -24,19 +27,16 @@ const animations = {
   exit: { opacity: 0, scale: 0.8 },
 } satisfies MotionProps;
 
-const MODALS = {
-  "create-task": CreateTask,
-};
-
 export default function LayoutMain({ children }: LayoutMainProps) {
   const params = useSearchParams();
   const modalType = params.get("modal") as ModalType;
+  const pathname = usePathname();
 
   const ModalComponent =
     modalType && MODALS.hasOwnProperty(modalType) ? MODALS[modalType] : null;
 
   return (
-    <AnimatePresence>
+    <AnimatePresence mode="wait">
       {ModalComponent && <ModalComponent params={params} key={modalType} />}
 
       {!ModalComponent && (
@@ -47,32 +47,30 @@ export default function LayoutMain({ children }: LayoutMainProps) {
           animate="animate"
           exit="exit"
           transition={{ type: "keyframes", duration: 0.2 }}
-          className="w-full h-screen overflow-auto"
+          className="w-full h-screen"
         >
           <header className="w-full flex border-b dark:border-zinc-600 border-zinc-200 bg-transparent text-gray-500 dark:text-zinc-200">
             <CenterSection className="p-0 px-2 justify-between items-center">
               <div className="flex gap-7">
-                <Link
-                  href="#"
-                  className="py-3 flex gap-2 items-center font-semibold border-b-2 border-indigo-400 text-indigo-500 dark:text-indigo-300"
-                >
-                  <FaRocket size={16} />
-                  <span className={`${fontSaira}`}>Tasks log</span>
-                </Link>
-                <Link
-                  href="#"
-                  className="py-3 flex gap-2 items-center font-semibold border-b-2 border-transparent text-zinc-400"
-                >
-                  <CgGoogleTasks />
-                  <span className={`${fontSaira}`}>All Tasks</span>
-                </Link>
-                <Link
-                  href="#"
-                  className="py-3 flex gap-2 items-center font-semibold border-b-2 border-transparent text-zinc-400"
-                >
-                  <TbClockHour3Filled size={16} />
-                  <span className={`${fontSaira}`}>Reminders</span>
-                </Link>
+                {Object.entries(Pages)?.map(
+                  ([link, { name, icon: Icon, size }]) => {
+                    const linkT = `/${link}`;
+                    const selected = pathname.startsWith(linkT);
+
+                    return (
+                      <Link
+                        key={name}
+                        href={linkT}
+                        data-selected={selected}
+                        className="py-3 flex gap-2 items-center font-semibold border-b-2 data-[selected=true]:border-indigo-400 data-[selected=true]:scale-[1.05]
+                        text-zinc-400 data-[selected=true]:text-indigo-500 dark:text-zinc-500 border-transparent data-[selected=true]:dark:text-indigo-300"
+                      >
+                        <Icon size={size} />
+                        <span className={`${fontSaira}`}>{name}</span>
+                      </Link>
+                    );
+                  }
+                )}
               </div>
               <ButtonTheme />
             </CenterSection>
