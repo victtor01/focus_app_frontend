@@ -3,7 +3,7 @@
 import { CenterSection } from "@/components/center-section";
 import { useTasks } from "@/hooks/use-tasks";
 import { ITask } from "@/interfaces/ITask";
-import { fontOpenSans, fontSaira } from "@/utils/fonts";
+import { fontSaira } from "@/utils/fonts";
 import { labelsColors } from "@/utils/label-colors";
 import Link from "next/link";
 import { TbClockHour7Filled } from "react-icons/tb";
@@ -11,6 +11,10 @@ import { TbClockHour7Filled } from "react-icons/tb";
 export default function AllTasks() {
   const { useAllTasks } = useTasks();
   const { tasks, isLoading } = useAllTasks();
+
+  if(isLoading) {
+    return <>loading...</>
+  }
 
   return (
     <CenterSection className="flex-col px-2">

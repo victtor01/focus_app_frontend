@@ -3,27 +3,12 @@ import { ReminderCustom, ReminderWeek } from "@/components/reminder-component";
 import { useTasks } from "@/hooks/use-tasks";
 import { fontOpenSans, fontSaira } from "@/utils/fonts";
 import { ReadonlyURLSearchParams } from "next/navigation";
-import { useForm } from "react-hook-form";
 
 interface ModalProps {
   params: ReadonlyURLSearchParams;
 }
 
-const useEditTask = () => {
-  const form = useForm();
-
-  return {
-    form,
-  };
-};
-
-export const EditTask = ({ params }: ModalProps) => {
-  const taskId = params?.get("taskId") || null;
-
-  if (!taskId) {
-    return <div>Não há taskId</div>;
-  }
-
+const ShowTasks = ({ taskId }: { taskId: string }) => {
   const { useFindById } = useTasks();
   const { task, isLoading } = useFindById(taskId);
 
@@ -36,7 +21,7 @@ export const EditTask = ({ params }: ModalProps) => {
   }
 
   return (
-    <modal.background>
+    <modal.background className="dark:bg-gradient-to-r dark:from-zinc-950 dark:to-zinc-950">
       <modal.form className="border border-gray-200 mb-[10rem] dark:border-zinc-700 rounded-md max-w-[45rem] mt-[5rem] z-20">
         <modal.header
           title="Edit task"
@@ -85,10 +70,8 @@ export const EditTask = ({ params }: ModalProps) => {
                   return (
                     <ReminderCustom
                       key={index}
-                      data={{
-                        daysCustom: reminder.customReminderDates,
-                        type: reminder.reminderType,
-                      }}
+                      reminder={reminder}
+                      taskId={task.id}
                     />
                   );
 
@@ -96,10 +79,8 @@ export const EditTask = ({ params }: ModalProps) => {
                   return (
                     <ReminderWeek
                       key={index}
-                      data={{
-                        daysWeek: reminder?.reminderDaysOfWeek,
-                        type: reminder.reminderType,
-                      }}
+                      reminder={reminder}
+                      taskId={task.id}
                     />
                   );
               }
@@ -122,4 +103,14 @@ export const EditTask = ({ params }: ModalProps) => {
       </modal.form>
     </modal.background>
   );
+};
+
+export const EditTask = ({ params }: ModalProps) => {
+  const taskId = params?.get("taskId") || null;
+
+  if (!taskId) {
+    return <div>Não há taskId</div>;
+  }
+
+  return <ShowTasks taskId={taskId} />;
 };

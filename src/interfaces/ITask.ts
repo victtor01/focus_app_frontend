@@ -1,3 +1,5 @@
+import { ITaskLog } from "./ITaskLog";
+
 export interface ITask {
   id: string;
   name: string;
@@ -17,4 +19,6 @@ export interface IReminderTask {
   customReminderDates: string[],
   reminderDaysOfWeek: string[],
   reminderType: string;
+  tasksLogs?: ITaskLog[]
+  task?: ITask
 }

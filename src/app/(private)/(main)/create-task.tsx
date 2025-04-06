@@ -1,9 +1,4 @@
 import { modal } from "@/components/modal-container";
-import { ReadonlyURLSearchParams } from "next/navigation";
-
-interface ModalProps {
-  params: ReadonlyURLSearchParams;
-}
 
 const FormCreateTask = () => {
   return (
@@ -17,9 +12,9 @@ const FormCreateTask = () => {
   );
 };
 
-function CreateTask(_: ModalProps) {
+function CreateTask() {
   return (
-    <modal.background>
+    <modal.background >
       <modal.form className="p-4 rounded-md max-w-[30rem] my-[10rem]">
         <modal.header className="p-0" title="Criar nova task" />
         <FormCreateTask />

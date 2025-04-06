@@ -39,7 +39,7 @@ export const AllTasks = () => {
   return (
     <CenterSection className="flex flex-col gap-2 relative pb-[10rem]">
       <div className="flex flex-col w-full relative">
-        <section className="flex justify-between bg-white relative p-4 z-10 dark:border-zinc-700 dark:bg-zinc-900 border border-zinc-100 rounded-md">
+        <section className="flex justify-between bg-white relative p-4 z-10 dark:border-zinc-700 dark:bg-zinc-900/70 border border-zinc-100 rounded-md">
           <header className="flex flex-col px-1 justify-between">
             {Array.from({ length: 12 }).map((_, index) => (
               <span

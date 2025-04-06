@@ -47,9 +47,10 @@ Content-Type: application/json
 
 {
   "customReminderDates": ["2025-03-26", "2025-03-25"],
-  "reminderDaysOfWeek": ["2025-03-26", "2025-03-25"],
-  "reminderType": "WEEKLY",
-  "taskId": "6adf5364-3137-4097-bfbc-e371e5700e67"
+  "reminderDaysOfWeek": ["2025-04-01", "2025-04-02"],
+  "taskId": "6adf5364-3137-4097-bfbc-e371e5700e67",
+  "reminderType": "CUSTOM",
+  "repeat": false
 }
 
 ###
@@ -58,12 +59,20 @@ GET {{HOST}}/reminders HTTP/1.1
 
 ###
 
+GET {{HOST}}/reminders/calendar?start=2025-01-01&end=2025-05-01
+
+###
+DELETE {{HOST}}/reminders/83ac7b66-3c3e-40d2-8b25-63b9ead738e7 HTTP/1.1
+
+###
+
 POST {{HOST}}/tasks-log HTTP/1.1
 Content-Type: application/json
 
 {
-  "day": "2025-03-28",
-  "taskId": "4861f064-acf5-4c73-bdb4-7c897a70c006",
+  "day": "2025-04-02",
+  "reminderId": "7274c8e6-1def-40ef-9fb5-ca1d6885a6e7",
+  "taskId": "6adf5364-3137-4097-bfbc-e371e5700e67",
   "hour": "17:00:00"
 }
 
