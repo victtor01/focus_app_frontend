@@ -46,14 +46,20 @@ export const ButtonTheme = () => {
   if (dark === null) return;
 
   return (
-    <button
-      type="button"
-      onClick={handle}
-      className="w-8 h-8 grid place-items-center text-gray-500 hover:opacity-100 dark:text-gray-100 opacity-80 bg-zinc-200  dark:bg-zinc-700 rounded-md"
-    >
-      {!dark && <TbSunFilled size={12} />}
+    <button type="button" onClick={handle} className="flex gap-2 items-center">
+      {!dark && (
+        <div className="flex gap-2 items-center text-sm">
+          <TbSunFilled size={12} />
+          Light
+        </div>
+      )}
 
-      {dark && <FaMoon size={12} />}
+      {dark && (
+        <div className="flex gap-2 items-center text-sm">
+          <FaMoon size={12} />
+          Dark
+        </div>
+      )}
     </button>
   );
 };

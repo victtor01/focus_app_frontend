@@ -7,18 +7,20 @@ import { fontSaira } from "@/utils/fonts";
 import { labelsColors } from "@/utils/label-colors";
 import Link from "next/link";
 import { TbClockHour7Filled } from "react-icons/tb";
+import { TiThList } from "react-icons/ti";
 
-export default function AllTasks() {
+export default function AllTasksList() {
   const { useAllTasks } = useTasks();
   const { tasks, isLoading } = useAllTasks();
 
-  if(isLoading) {
-    return <>loading...</>
+  if (isLoading) {
+    return <>loading...</>;
   }
 
   return (
-    <CenterSection className="flex-col px-2">
-      <header className="flex text-lg dark:text-zinc-300 font-semibold mt-4">
+    <CenterSection className="flex-col">
+      <header className="flex dark:text-indigo-200 font-semibold mt-4 gap-2 items-center">
+        <TiThList />
         <h1 className={fontSaira}>Minhas tarefas</h1>
       </header>
 

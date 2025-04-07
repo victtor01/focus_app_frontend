@@ -11,7 +11,9 @@ import weekOfYear from "dayjs/plugin/weekOfYear";
 import weekday from "dayjs/plugin/weekday";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { CgGoogleTasks } from "react-icons/cg";
 import { FaCheck, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 dayjs.extend(weekOfYear);
 dayjs.extend(weekday);
@@ -68,36 +70,45 @@ const useReminders = () => {
   const back = () => updateStartDate(setStartDate, view, "back");
   const handleNow = () => setStartDate(getInitialStartDate(view, null));
 
-  const completeReminder = async (data: CreateLog) => {
-    const { day, reminderId, taskId } = data;
+  const invalidateQueries = async () => {
+    await queryClient.invalidateQueries({
+      queryKey: ["tasks-log"],
+    });
 
-    if (!taskId) {
-      return;
+    await queryClient.invalidateQueries({
+      queryKey: [
+        "reminders",
+        "calendar",
+        { start: startDate.format(), end: endDate.format() },
+      ],
+    });
+  };
+
+  const deleteReminder = async (taskId: string) => {
+    try {
+      await api.delete(`/tasks-log/${taskId}`);
+      invalidateQueries();
+      toast(<span className={`${fontSaira} text-indigo-200`}>Updated</span>);
+    } catch (error) {
+      console.error("Error deleting reminder:", error);
     }
+  };
+
+  const completeReminder = async ({ day, reminderId, taskId }: CreateLog) => {
+    if (!taskId) return;
 
     try {
-      const res = await api.post("/tasks-log", {
+      await api.post("/tasks-log", {
         day,
         reminderId,
         taskId,
       });
 
-      await Promise.all([
-        queryClient.invalidateQueries({
-          queryKey: ["tasks-log"],
-        }),
-        queryClient.invalidateQueries({
-          queryKey: [
-            "reminders",
-            "calendar",
-            { start: startDate.format(), end: endDate.format() },
-          ],
-        }),
-      ]);
+      invalidateQueries();
 
-      console.log(res);
-    } catch (err: unknown) {
-      console.log(err);
+      toast(<span className={`${fontSaira} text-indigo-200`}>Completed</span>);
+    } catch (error) {
+      console.error("Error completing reminder:", error);
     }
   };
 
@@ -105,6 +116,7 @@ const useReminders = () => {
     handles: {
       handleView,
       handleNow,
+      deleteReminder,
       completeReminder,
       next,
       back,
@@ -156,13 +168,23 @@ const updateStartDate = (
 
 export default function Reminders() {
   const { handles, datas, constants } = useReminders();
-  const { handleView, handleNow, completeReminder, next, back } = handles;
+  const { handleView, handleNow, completeReminder, deleteReminder, ...rest } =
+    handles;
+  const { next, back } = rest;
   const { startDate, endDate, view } = constants;
   const { reminders } = datas;
 
   return (
-    <section className="flex flex-col gap-2 w-full">
-      <CenterSection className="mt-4 py-2 px-2 flex-wrap gap-2 justify-between flex overflow-hidden">
+    <section className="flex flex-col gap-2 w-full z-10 overflow-x-hidden">
+      <CenterSection className="mt-4 py-2 flex-wrap gap-2 justify-between flex overflow-hidden">
+        <header className="flex items-center gap-3">
+          <CgGoogleTasks size={20} />
+          <span
+            className={`${fontSaira} font-semibold text-gray-500 dark:text-indigo-200`}
+          >
+            Calendário
+          </span>
+        </header>
         <div className="flex items-center gap-2">
           <div
             className="dark:bg-zinc-800 text-gray-500 dark:text-indigo-100 rounded-md font-semibold flex
@@ -226,7 +248,7 @@ export default function Reminders() {
         </div>
       </CenterSection>
 
-      <CenterSection className="grid grid-cols-7 gap-2 px-3 p-2">
+      <CenterSection className="grid grid-cols-7 gap-2">
         {Array.from({ length: 7 }).map((_, index) => {
           const date = dayjs(startDate).weekday(index);
 
@@ -247,11 +269,11 @@ export default function Reminders() {
             const lenght: boolean = reminders?.length > 0;
             const today = date === dayjs().format("YYYY-MM-DD");
             const isSameMonth = dayjs(date).isSame(startDate, "month");
-            const isComplete = !!reminders[0]?.tasksLogs?.find(
-              (taskLog) => taskLog.day === date && taskLog.id
-            );
 
             const taskId = reminders?.[0]?.task?.id || undefined;
+            const completeThis = reminders[0]?.tasksLogs?.find(
+              (taskLog) => taskLog.day === date && taskLog.id
+            );
 
             return (
               <div
@@ -268,28 +290,36 @@ export default function Reminders() {
                 <section className="flex flex-col p-2 gap-1">
                   {reminders?.[0]?.task?.name && (
                     <div
-                      data-complete={isComplete}
+                      data-complete={!!completeThis}
                       className="flex items-center gap-2 text-md justify-between data-[complete=true]:opacity-60"
                     >
                       {dayjs().isAfter(date) && (
                         <button
                           type="button"
-                          onClick={() =>
-                            completeReminder({
-                              taskId: taskId || null,
-                              reminderId: reminders[0]?.id,
-                              day: date,
-                            })
-                          }
-                          data-complete={isComplete}
-                          className="w-6 h-6 rounded-full data-[complete=true]:border-indigo-600 grid text-white place-items-center bg-zinc-200 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-800 data-[complete=true]:bg-indigo-500"
+                          onClick={() => {
+                            const action = completeThis
+                              ? () => deleteReminder(completeThis.id)
+                              : () =>
+                                  completeReminder({
+                                    taskId: taskId || null,
+                                    reminderId: reminders[0]?.id,
+                                    day: date,
+                                  });
+                            action();
+                          }}
+                          data-complete={!!completeThis}
+                          className={`w-6 h-6 rounded-full grid place-items-center text-white border ${
+                            !!completeThis
+                              ? "border-indigo-600 bg-indigo-500"
+                              : "bg-zinc-200 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-800"
+                          }`}
                         >
-                          {isComplete && <FaCheck size={10} />}
+                          {!!completeThis && <FaCheck size={10} />}
                         </button>
                       )}
                       <span
                         className={`${fontSaira} font-semibold opacity-70  ${
-                          isComplete ? "line-through" : ""
+                          !!completeThis ? "line-through" : ""
                         }`}
                       >
                         {reminders?.[0]?.task?.name}

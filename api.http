@@ -46,9 +46,9 @@ POST {{HOST}}/reminders HTTP/1.1
 Content-Type: application/json
 
 {
-  "customReminderDates": ["2025-03-26", "2025-03-25"],
-  "reminderDaysOfWeek": ["2025-04-01", "2025-04-02"],
-  "taskId": "6adf5364-3137-4097-bfbc-e371e5700e67",
+  "customReminderDates": ["2025-04-01", "2025-04-05", "2025-04-12"],
+  "reminderDaysOfWeek": ["2025-04-01", "2025-04-05", "2025-04-12"],
+  "taskId": "08ddbdb5-52b2-491f-94d6-75eff3b419ac",
   "reminderType": "CUSTOM",
   "repeat": false
 }

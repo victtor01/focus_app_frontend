@@ -1,25 +1,19 @@
 import { CenterSection } from "@/components/center-section";
-import { fontSaira } from "@/utils/fonts";
-import Link from "next/link";
-import { FaPlus } from "react-icons/fa";
+import Reminders from "../reminders/page";
+import AllTasksList from "../tasks/page";
 import { AllTasks } from "./all-tasks";
+import { FireIcon } from "@/components/fire-icon";
+import { IntensiveDashboard } from "@/components/intensive-dashboard";
 
 export default function Home() {
   return (
-    <CenterSection className="flex-col px-2">
-      <header className="flex justify-between items-center mt-2">
-        <div></div>
-        <div>
-          <Link
-            href="?modal=create-task"
-            className="border dark:border-zinc-600 dark:text-indigo-100 dark:bg-zinc-800 flex rounded items-center gap-2 p-1 px-3 opacity-90 hover:opacity-100
-            dark:hover:bg-indigo-500 dark:hover:shadow-xl dark:shadow-indigo-500/70 dark:hover:border-indigo-500"
-          >
-            <span className={fontSaira}>Task</span>
-            <FaPlus size={14} />
-          </Link>
-        </div>
-      </header>
+    <CenterSection className="flex-col px-2 py-4">
+      <div className="pointer-events-none fixed inset-0 h-full w-full bg-transparent z-0 opacity-5 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]"></div>
+      <div className="pointer-events-none fixed bottom-0 left-0 opacity-30 z-0 bg-indigo-500 w-[20vh] h-[20vh] rounded-[30%] rotate-[14deg] translate-x-[-50%] translate-y-[20%]"></div>
+      <div className="pointer-events-none fixed bottom-40 opacity-10 right-0 z-0 bg-indigo-500 w-[20vh] h-[20vh] rounded-[30%] rotate-[14deg] translate-x-[50%] translate-y-[20%]"></div>
+      <IntensiveDashboard />
+      <AllTasksList />
+      <Reminders />
       <AllTasks />
     </CenterSection>
   );
