@@ -175,8 +175,8 @@ export default function Reminders() {
   const { reminders } = datas;
 
   return (
-    <section className="flex flex-col gap-2 w-full z-10 overflow-x-hidden">
-      <CenterSection className="mt-4 py-2 flex-wrap gap-2 justify-between flex overflow-hidden">
+    <section className="flex flex-col mt-4 gap-2 w-full rounded-md border border-zinc-200 dark:border-zinc-800 z-10 overflow-x-hidden bg-white dark:bg-zinc-900/40">
+      <CenterSection className="py-2 flex-wrap gap-2 p-2 border-b border-zinc-200 dark:border-zinc-800 justify-between flex overflow-hidden">
         <header className="flex items-center gap-3">
           <CgGoogleTasks size={20} />
           <span
@@ -211,7 +211,7 @@ export default function Reminders() {
             <span
               className={`${fontSaira} font-semibold text-zinc-500 dark:text-indigo-100`}
             >
-              Custom
+              Month
             </span>
             <button
               type="button"
@@ -248,14 +248,14 @@ export default function Reminders() {
         </div>
       </CenterSection>
 
-      <CenterSection className="grid grid-cols-7 gap-2">
+      <CenterSection className="grid grid-cols-7 gap-2 p-1 px-2 pb-2">
         {Array.from({ length: 7 }).map((_, index) => {
           const date = dayjs(startDate).weekday(index);
 
           return (
             <div
               key={index}
-              className="w-full lg:max-w-[16rem] h-auto rounded dark:bg-zinc-900 dark:border-zinc-800 "
+              className="w-full lg:max-w-[16rem] h-auto rounded dark:border-zinc-800 "
             >
               <header className="font-semibold text-zinc-500 dark:text-indigo-50/60">
                 <span className={fontSaira}>{date.format("ddd")}</span>
@@ -328,7 +328,7 @@ export default function Reminders() {
                   )}
 
                   {reminders?.length - 1 > 0 && (
-                    <div className="bg-indigo-500/50 border border-indigo-500 text-indigo-200 px-2 rounded font-semibold text-sm opacity-60 mt-1">
+                    <div className="bg-indigo-500/50 border text-black border-indigo-500 dark:text-indigo-200 px-2 rounded font-semibold text-sm opacity-60 mt-1">
                       <span className={fontSaira}>
                         +{reminders?.length - 1} Tasks
                       </span>

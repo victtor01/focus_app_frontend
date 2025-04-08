@@ -59,7 +59,7 @@ GET {{HOST}}/reminders HTTP/1.1
 
 ###
 
-GET {{HOST}}/reminders/calendar?start=2025-01-01&end=2025-05-01
+GET {{HOST}}/reminders/calendar?start=2025-03-25&end=2025-03-26
 
 ###
 DELETE {{HOST}}/reminders/83ac7b66-3c3e-40d2-8b25-63b9ead738e7 HTTP/1.1

@@ -16,7 +16,9 @@ export const IntensiveDashboard = () => {
             className={`${fontSaira} flex-1 text-xl flex justify-between font-semibold text-zinc-500 dark:text-indigo-200`}
           >
             <span>255 Intensivos</span>
-            <b className="p-1 px-2 bg-zinc-800 rounded-lg text-base">Commit</b>
+            <div className="p-1 px-2 bg-zinc-100 dark:bg-zinc-800 rounded-lg text-base">
+              Commit
+            </div>
           </div>
         </div>
 
@@ -26,7 +28,7 @@ export const IntensiveDashboard = () => {
             className={`${fontSaira} flex-1 gap-2 justify-between flex text-xl font-semibold text-zinc-500 dark:text-indigo-200`}
           >
             <span>14 Intensivos </span>
-            <div className="p-1 px-2 bg-zinc-800 rounded-lg text-base">
+            <div className="p-1 px-2 bg-zinc-100 dark:bg-zinc-800 rounded-lg text-base ">
               Estudar C#
             </div>
           </div>

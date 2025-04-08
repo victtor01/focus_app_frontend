@@ -46,7 +46,7 @@ export const ButtonTheme = () => {
   if (dark === null) return;
 
   return (
-    <button type="button" onClick={handle} className="flex gap-2 items-center">
+    <button type="button" onClick={handle} className="flex gap-2 p-2 items-center hover:bg-zinc-200 dark:hover:bg-zinc-700">
       {!dark && (
         <div className="flex gap-2 items-center text-sm">
           <TbSunFilled size={12} />

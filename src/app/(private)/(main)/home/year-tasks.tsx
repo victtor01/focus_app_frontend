@@ -39,7 +39,7 @@ export const AllTasks = () => {
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 z-10">
       <header className="flex justify-between items-end mt-2">
         <div className="flex gap-2 items-center">
           <HiViewGrid />
@@ -60,9 +60,9 @@ export const AllTasks = () => {
           </Link>
         </div>
       </header>
-      <CenterSection className="flex flex-col gap-2 relative pb-[10rem]">
+      <CenterSection className="flex flex-col gap-2 relative pb-[3rem]">
         <div className="flex flex-col w-full relative">
-          <section className="flex justify-between bg-white relative p-4 z-10 dark:border-zinc-900 dark:bg-zinc-900/60 border border-zinc-100 rounded-md">
+          <section className="flex gap-2 justify-center bg-white relative p-4 z-10 dark:border-zinc-800 dark:bg-zinc-900 border border-zinc-100 rounded-md">
             <header className="flex flex-col px-1 justify-between">
               {Array.from({ length: 12 }).map((_, index) => (
                 <span
@@ -73,10 +73,12 @@ export const AllTasks = () => {
                 </span>
               ))}
             </header>
-            <div className="flex items-center justify-center">
-              <div className="grid grid-cols-12 md:grid-cols-20 lg:grid-cols-26 gap-1">
+
+            <div className="flex">
+              <div className="flex flex-wrap gap-1">
                 {Object?.entries(calendar)?.map(([date, tasks]) => {
                   const isSelected = day && date === day;
+                  const today = dayjs().format("YYYY-MM-DD") === date;
 
                   return (
                     <Link
@@ -84,10 +86,16 @@ export const AllTasks = () => {
                       scroll={false}
                       href={`?day=${date}`}
                       data-selected={isSelected}
+                      data-today={today}
                       data-havetask={tasks?.length > 0}
-                      className="w-6 h-6 bg-zinc-100 data-[selected=false]:opacity-30 transition-all dark:bg-zinc-800 relative group z-10 hover:z-20 rounded-md data-[havetask=true]:bg-indigo-400"
+                      className="w-6 h-6 bg-zinc-100 data-[selected=false]:opacity-30 transition-all dark:bg-zinc-800 relative group z-10 hover:z-20 rounded-md data-[havetask=true]:bg-indigo-400
+                      data-[today=true]:shadow-md shadow-zinc-400 dark:shadow-black data-[today=true]:ring-violet-500 data-[today=true]:border-2 border-indigo-200"
                     >
-                      <div className="absolute top-0 -translate-y-10 left-[50%] translate-x-[-50%] rounded-md px-1 dark:text-indigo-100 bg-white dark:bg-zinc-600 w-auto group-hover:flex hidden">
+                      <div
+                        data-selected={isSelected}
+                        className="absolute top-0 -translate-y-10 left-[50%] translate-x-[-50%] rounded-md px-1 dark:text-indigo-100 bg-white dark:bg-zinc-800 shadow dark:shadow-black w-auto group-hover:flex hidden
+                        data-[selected=true]:flex"
+                      >
                         {tasks?.length > 0 && (
                           <span
                             className={`${fontSaira} flex flex-nowrap text-nowrap text-sm p-1 font-semibold`}

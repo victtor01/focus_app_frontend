@@ -1,9 +1,8 @@
 import { CenterSection } from "@/components/center-section";
-import Reminders from "../reminders/page";
-import AllTasksList from "../tasks/page";
-import { AllTasks } from "./all-tasks";
-import { FireIcon } from "@/components/fire-icon";
 import { IntensiveDashboard } from "@/components/intensive-dashboard";
+import AllTasksList from "../tasks/page";
+import { AllTasks } from "./year-tasks";
+import Reminders from "./reminders";
 
 export default function Home() {
   return (

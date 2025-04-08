@@ -21,7 +21,9 @@ export const TasksToday = ({ data }: TasksProps) => {
       <header className="flex w-full p-2 font-semibold opacity-70 justify-between">
         {dayjs(day).format("ddd, DD[th]")}
 
-        <Link href="?">Close</Link>
+        <Link href="?" scroll={false}>
+          Close
+        </Link>
       </header>
 
       {tasks?.map((task, index) => {
@@ -35,7 +37,6 @@ export const TasksToday = ({ data }: TasksProps) => {
                 className={`${fontSaira} w-28 text-nowrap p-1 bg-zinc-100 dark:bg-zinc-700 opacity-60 text-sm px-2 rounded-lg`}
               >
                 {task?.hour}
-
                 {!task?.hour && "not have hour"}
               </span>
 
