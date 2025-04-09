@@ -4,12 +4,13 @@ import { ButtonTheme } from "@/components/button-theme";
 import { CenterSection } from "@/components/center-section";
 import { fontSaira } from "@/utils/fonts";
 import { Pages } from "@/utils/page";
-import { AnimatePresence, motion, MotionProps } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { CompleteTask } from "./complete-task";
 import { CreateTask } from "./create-task";
 import { EditTask } from "./edit-task";
-import { useState } from "react";
 
 export type ModalType = keyof typeof MODALS;
 
@@ -20,13 +21,8 @@ interface LayoutMainProps {
 const MODALS = {
   "create-task": CreateTask,
   "edit-task": EditTask,
+  "log-task": CompleteTask,
 };
-
-const animations = {
-  initial: { opacity: 0, scale: 0.8 },
-  animate: { opacity: 1, scale: 1 },
-  exit: { opacity: 0, scale: 0.8 },
-} satisfies MotionProps;
 
 export default function LayoutMain({ children }: LayoutMainProps) {
   const params = useSearchParams();
@@ -42,12 +38,9 @@ export default function LayoutMain({ children }: LayoutMainProps) {
     <AnimatePresence mode="wait">
       {ModalComponent && <ModalComponent params={params} key={modalType} />}
 
-      <main
-        key="main"
-        className="w-full h-screen overflow-auto"
-      >
-        <header className="w-full flex border-b dark:border-zinc-600 dark:bg-zinc-900 border-zinc-200 bg-white text-gray-500 dark:text-zinc-200">
-          <CenterSection className="p-0 px-2 justify-between items-center">
+      <main className="w-full h-screen overflow-auto dark:bg-zinc-950 bg-white text-gray-600 dark:text-gray-200">
+        <header className="w-full flex z-20 border-b dark:border-zinc-800 dark:bg-zinc-950 border-zinc-200 bg-white text-gray-500 dark:text-zinc-200">
+          <CenterSection className="p-0 z-20 px-2 justify-between items-center">
             <div className="flex gap-7">
               {Object.entries(Pages)?.map(
                 ([link, { name, icon: Icon, size }]) => {
@@ -73,7 +66,7 @@ export default function LayoutMain({ children }: LayoutMainProps) {
               <button
                 type="button"
                 onClick={() => setOpenSettings((prev) => !prev)}
-                className="flex gap-2 p-1 rounded bg-white dark:bg-zinc-800 items-center relative"
+                className="flex gap-2 p-1 px-2 rounded bg-white dark:bg-zinc-900 items-center relative"
               >
                 <div className="flex flex-col">
                   <div className="flex gap-2 items-center">
@@ -92,10 +85,10 @@ export default function LayoutMain({ children }: LayoutMainProps) {
                     <div className="w-[50%] bg-indigo-500 rounded-full" />
                   </div>
                 </div>
-                <div className="w-8 h-8 flex bg-gray-200 rounded-full dark:bg-zinc-700"></div>
+                <div className="w-8 h-8 flex bg-gray-200 rounded-full dark:bg-zinc-800"></div>
               </button>
               {openSettings && (
-                <div className="absolute flex flex-col w-full overflow-hidden divide-y divide-zinc-200 dark:divide-zinc-700 z-30 shadow rounded-md bg-white dark:bg-zinc-800 top-[100%] mt-2">
+                <div className="absolute flex flex-col w-full overflow-hidden divide-y divide-zinc-200 dark:divide-zinc-700 shadow rounded-md bg-white dark:bg-zinc-800 top-[100%] mt-2">
                   <ButtonTheme />
                 </div>
               )}

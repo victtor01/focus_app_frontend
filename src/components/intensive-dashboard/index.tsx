@@ -6,7 +6,7 @@ import { FireIcon } from "../fire-icon";
 export const IntensiveDashboard = () => {
   return (
     <div className="flex gap-2">
-      <div className="flex flex-col lg:w-auto w-full gap-0 p-4 h-auto bg-white dark:bg-zinc-900 shadow dark:shadow-black rounded relative">
+      <div className="flex flex-col lg:w-auto w-full gap-0 p-4 h-auto bg-white dark:bg-zinc-950 border border-transparent dark:border-zinc-800 shadow dark:shadow-black rounded relative">
         <div className="flex items-center gap-3">
           <div className="w-12">
             <FireIcon />

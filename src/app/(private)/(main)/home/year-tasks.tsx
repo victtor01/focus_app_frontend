@@ -52,7 +52,7 @@ export const AllTasks = () => {
         <div>
           <Link
             href="?modal=create-task"
-            className="border dark:border-zinc-800 dark:text-indigo-100 dark:bg-zinc-900 flex rounded items-center gap-2 p-1 px-3 opacity-90 hover:opacity-100
+            className="border dark:border-zinc-800 dark:text-indigo-100 dark:bg-zinc-950 flex rounded items-center gap-2 p-1 px-3 opacity-90 hover:opacity-100
             dark:hover:bg-indigo-500 dark:hover:shadow-xl dark:shadow-indigo-500/70 dark:hover:border-indigo-500"
           >
             <span className={fontSaira}>Task</span>
@@ -62,7 +62,7 @@ export const AllTasks = () => {
       </header>
       <CenterSection className="flex flex-col gap-2 relative pb-[3rem]">
         <div className="flex flex-col w-full relative">
-          <section className="flex gap-2 justify-center bg-white relative p-4 z-10 dark:border-zinc-800 dark:bg-zinc-900 border border-zinc-100 rounded-md">
+          <section className="flex gap-2 justify-center bg-white relative p-4 z-10 dark:border-zinc-800 dark:bg-zinc-950 border border-zinc-100 rounded-md">
             <header className="flex flex-col px-1 justify-between">
               {Array.from({ length: 12 }).map((_, index) => (
                 <span
@@ -88,7 +88,7 @@ export const AllTasks = () => {
                       data-selected={isSelected}
                       data-today={today}
                       data-havetask={tasks?.length > 0}
-                      className="w-6 h-6 bg-zinc-100 data-[selected=false]:opacity-30 transition-all dark:bg-zinc-800 relative group z-10 hover:z-20 rounded-md data-[havetask=true]:bg-indigo-400
+                      className="w-6 h-6 bg-zinc-100 data-[selected=false]:opacity-30 transition-all dark:bg-zinc-900 relative group z-10 hover:z-20 rounded-md data-[havetask=true]:bg-indigo-400
                       data-[today=true]:shadow-md shadow-zinc-400 dark:shadow-black data-[today=true]:ring-violet-500 data-[today=true]:border-2 border-indigo-200"
                     >
                       <div

@@ -34,7 +34,7 @@ export default async function RootLayout({
     <html lang="en" className={theme}>
       <body
         className={`${geistSans.variable} ${geistMono.variable} 
-        antialiased dark:from-neutral-900 dark:to-neutral-950 bg-radial from-gray-100 to-white text-gray-600 dark:text-gray-200`}
+        antialiased dark:from-neutral-950 dark:to-neutral-950 bg-gradient-to-b from-gray-100 to-white text-gray-600 dark:text-gray-200`}
       >
         <QueryProvider>{children}</QueryProvider>
         <ToastfyContainer />

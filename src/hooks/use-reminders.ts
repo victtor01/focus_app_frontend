@@ -1,4 +1,6 @@
+import { IReminderTask } from "@/interfaces/ITask";
 import { api } from "@/utils/api";
+import { useQuery } from "@tanstack/react-query";
 
 const deleteReminder = async (reminderId: string) => {
   try {
@@ -9,6 +11,14 @@ const deleteReminder = async (reminderId: string) => {
   }
 };
 
+const useFetchReminderById = (reminderId: string) => {
+  return useQuery<IReminderTask>({
+    queryKey: ["reminders", reminderId],
+    queryFn: async () => (await api.get(`/reminders/${reminderId}`))?.data,
+  });
+};
+
 export const useReminders = () => ({
   deleteReminder,
+  useFetchReminderById
 });

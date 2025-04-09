@@ -17,7 +17,7 @@ export const TasksToday = ({ data }: TasksProps) => {
   const { tasks } = useGetTaskLogByDate(day);
 
   return (
-    <div className="border rounded-md dark:border-zinc-700 dark:bg-zinc-900 mt-4 bg-white border-zinc-100 divide-zinc-100 z-10 divide-y-2 dark:divide-zinc-700">
+    <div className="border rounded-md dark:border-zinc-700 dark:bg-zinc-950 mt-4 bg-white border-zinc-100 divide-zinc-100 z-10 divide-y-2 dark:divide-zinc-700">
       <header className="flex w-full p-2 font-semibold opacity-70 justify-between">
         {dayjs(day).format("ddd, DD[th]")}
 
@@ -43,10 +43,6 @@ export const TasksToday = ({ data }: TasksProps) => {
               <div className="flex font-semibold dark:text-indigo-100 capitalize">
                 {task?.task?.name}
               </div>
-            </div>
-
-            <div>
-              <button></button>
             </div>
           </div>
         );

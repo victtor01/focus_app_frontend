@@ -1,26 +1,23 @@
 "use client";
 
 import { CenterSection } from "@/components/center-section";
-import { IReminderTask } from "@/interfaces/ITask";
+import { ReminderShowComponent } from "@/components/reminder-show-component";
+import { ViewReminders } from "@/components/view-reminders";
+import { useFetchReminders } from "@/hooks/use-fetch-reminders";
 import { queryClient } from "@/providers/query-client";
 import { api } from "@/utils/api";
 import { fontSaira } from "@/utils/fonts";
-import { useQuery } from "@tanstack/react-query";
 import dayjs, { Dayjs } from "dayjs";
 import weekOfYear from "dayjs/plugin/weekOfYear";
 import weekday from "dayjs/plugin/weekday";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CgGoogleTasks } from "react-icons/cg";
-import { FaCheck, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { toast } from "react-toastify";
 
 dayjs.extend(weekOfYear);
 dayjs.extend(weekday);
-
-type ReminderCalendar = {
-  [key: string]: IReminderTask[];
-};
 
 type CreateLog = {
   reminderId: string;
@@ -29,6 +26,8 @@ type CreateLog = {
 };
 
 type ViewType = "WEEKLY" | "CUSTOM";
+
+const selectedDateKey = "reminder_day";
 
 const getInitialStartDate = (view: ViewType, startDateParam: string | null) => {
   const defaultDate = dayjs();
@@ -46,14 +45,16 @@ const getInitialStartDate = (view: ViewType, startDateParam: string | null) => {
       return defaultDate.weekday(0);
   }
 };
+
 const useReminders = () => {
   const params = useSearchParams();
+  const router = useRouter();
+
+  const dateSelected = params?.get(selectedDateKey);
+  const startDateParam = params?.get("startAt");
 
   const [view, setView] = useState<ViewType>("CUSTOM");
-  const handleView = () =>
-    setView((prev) => (prev === "CUSTOM" ? "WEEKLY" : "CUSTOM"));
 
-  const startDateParam = params?.get("startAt");
   const [startDate, setStartDate] = useState<Dayjs>(
     getInitialStartDate(view, startDateParam)
   );
@@ -66,9 +67,18 @@ const useReminders = () => {
     setStartDate(getInitialStartDate(view, startDateParam));
   }, [view, startDateParam]);
 
+  const handleView = () =>
+    setView((prev) => (prev === "CUSTOM" ? "WEEKLY" : "CUSTOM"));
+
   const next = () => updateStartDate(setStartDate, view, "next");
   const back = () => updateStartDate(setStartDate, view, "back");
   const handleNow = () => setStartDate(getInitialStartDate(view, null));
+
+  const selectDate = (date: string) => {
+    router.push(`?${selectedDateKey}=${date}`, {
+      scroll: false,
+    });
+  };
 
   const invalidateQueries = async () => {
     await queryClient.invalidateQueries({
@@ -87,7 +97,7 @@ const useReminders = () => {
   const deleteReminder = async (taskId: string) => {
     try {
       await api.delete(`/tasks-log/${taskId}`);
-      invalidateQueries();
+      await invalidateQueries();
       toast(<span className={`${fontSaira} text-indigo-200`}>Updated</span>);
     } catch (error) {
       console.error("Error deleting reminder:", error);
@@ -104,7 +114,7 @@ const useReminders = () => {
         taskId,
       });
 
-      invalidateQueries();
+      await invalidateQueries();
 
       toast(<span className={`${fontSaira} text-indigo-200`}>Completed</span>);
     } catch (error) {
@@ -113,6 +123,10 @@ const useReminders = () => {
   };
 
   return {
+    utils: {
+      selectDate,
+      dateSelected,
+    },
     handles: {
       handleView,
       handleNow,
@@ -138,22 +152,6 @@ const calculateEndDate = (view: ViewType, startDate: Dayjs): Dayjs => {
     : dayjs(startDate).endOf("week");
 };
 
-const useFetchReminders = (startDate: Dayjs, endDate: Dayjs) => {
-  return useQuery<ReminderCalendar>({
-    queryKey: [
-      "reminders",
-      "calendar",
-      { start: startDate.format(), end: endDate.format() },
-    ],
-    queryFn: async () => {
-      const start = startDate.startOf("week").format("YYYY-MM-DD");
-      const end = endDate.format("YYYY-MM-DD");
-      return (await api.get(`/reminders/calendar?start=${start}&end=${end}`))
-        ?.data;
-    },
-  });
-};
-
 const updateStartDate = (
   setStartDate: React.Dispatch<React.SetStateAction<Dayjs>>,
   view: ViewType,
@@ -167,16 +165,17 @@ const updateStartDate = (
 };
 
 export default function Reminders() {
-  const { handles, datas, constants } = useReminders();
-  const { handleView, handleNow, completeReminder, deleteReminder, ...rest } =
+  const { utils, handles, datas, constants } = useReminders();
+  const { handleView, handleNow, ...rest } =
     handles;
+  const { selectDate, dateSelected } = utils;
   const { next, back } = rest;
   const { startDate, endDate, view } = constants;
   const { reminders } = datas;
 
   return (
-    <section className="flex flex-col mt-4 gap-2 w-full rounded-md border border-zinc-200 dark:border-zinc-800 z-10 overflow-x-hidden bg-white dark:bg-zinc-900/40">
-      <CenterSection className="py-2 flex-wrap gap-2 p-2 border-b border-zinc-200 dark:border-zinc-800 justify-between flex overflow-hidden">
+    <section className="flex flex-col mt-4 gap-2 w-full rounded-md z-10 overflow-x-hidden">
+      <CenterSection className="py-2 flex-wrap gap-2 p-2 border-b justify-between flex overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950">
         <header className="flex items-center gap-3">
           <CgGoogleTasks size={20} />
           <span
@@ -187,8 +186,8 @@ export default function Reminders() {
         </header>
         <div className="flex items-center gap-2">
           <div
-            className="dark:bg-zinc-800 text-gray-500 dark:text-indigo-100 rounded-md font-semibold flex
-          divide-x divide-zinc-200 dark:divide-zinc-700 opacity-70 bg-white shadow"
+            className="dark:bg-zinc-900 text-gray-500 dark:text-indigo-100 rounded-md font-semibold flex
+            divide-x divide-zinc-200 dark:border-zinc-800 border border-zinc-100 dark:divide-zinc-700 opacity-70 bg-white shadow"
           >
             <span className={`${fontSaira} p-1 px-3`}>
               {startDate.format("MMMM DD, YYYY")}
@@ -248,7 +247,7 @@ export default function Reminders() {
         </div>
       </CenterSection>
 
-      <CenterSection className="grid grid-cols-7 gap-2 p-1 px-2 pb-2">
+      <CenterSection className="grid grid-cols-7 gap-2 p-1 px-2 pb-2 border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 rounded">
         {Array.from({ length: 7 }).map((_, index) => {
           const date = dayjs(startDate).weekday(index);
 
@@ -267,64 +266,37 @@ export default function Reminders() {
         {reminders &&
           Object.entries(reminders)?.map(([date, reminders], index) => {
             const lenght: boolean = reminders?.length > 0;
-            const today = date === dayjs().format("YYYY-MM-DD");
-            const isSameMonth = dayjs(date).isSame(startDate, "month");
-
-            const taskId = reminders?.[0]?.task?.id || undefined;
+            const today: boolean = date === dayjs().format("YYYY-MM-DD");
+            const isSameMonth: boolean = dayjs(date).isSame(startDate, "month");
+            const selected: boolean = dateSelected === date;
             const completeThis = reminders[0]?.tasksLogs?.find(
               (taskLog) => taskLog.day === date && taskLog.id
             );
 
             return (
-              <div
+              <button
+                type="button"
                 key={index}
                 data-lenght={lenght}
                 data-today={today}
                 data-same-month={isSameMonth}
-                className="w-full lg:max-w-[16rem] min-h-[6rem] hover:ring-2 h-auto bg-white rounded dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 data-[lenght=false]:opacity-80 data-[today=true]:ring-2 ring-indigo-500 data-[same-month=false]:opacity-30"
+                onClick={() => selectDate(date)}
+                data-selected={selected}
+                className="w-12 lg:w-full flex flex-col relative items-center justify-center lg:justify-start lg:items-start lg:max-w-[16rem] lg:min-h-[6rem] hover:ring-2 min-hh-12 bg-white 
+                rounded-full lg:rounded dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 data-[lenght=false]:opacity-80 data-[today=true]:ring-2 
+                ring-indigo-500 data-[same-month=false]:opacity-30 data-[selected=true]:bg-zinc-100 dark:data-[selected=true]:bg-zinc-800"
               >
-                <header className="font-semibold text-zinc-500 dark:text-indigo-50/60 p-1 px-2">
+                <header className="font-semibold text-zinc-500 dark:text-indigo-50/60 flex w-full p-1 px-2">
                   <span className={fontSaira}>{dayjs(date)?.format("DD")}</span>
                 </header>
 
-                <section className="flex flex-col p-2 gap-1">
+                <section className="flex-col p-2 gap-1 hidden lg:flex">
                   {reminders?.[0]?.task?.name && (
-                    <div
-                      data-complete={!!completeThis}
-                      className="flex items-center gap-2 text-md justify-between data-[complete=true]:opacity-60"
-                    >
-                      {dayjs().isAfter(date) && (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const action = completeThis
-                              ? () => deleteReminder(completeThis.id)
-                              : () =>
-                                  completeReminder({
-                                    taskId: taskId || null,
-                                    reminderId: reminders[0]?.id,
-                                    day: date,
-                                  });
-                            action();
-                          }}
-                          data-complete={!!completeThis}
-                          className={`w-6 h-6 rounded-full grid place-items-center text-white border ${
-                            !!completeThis
-                              ? "border-indigo-600 bg-indigo-500"
-                              : "bg-zinc-200 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-800"
-                          }`}
-                        >
-                          {!!completeThis && <FaCheck size={10} />}
-                        </button>
-                      )}
-                      <span
-                        className={`${fontSaira} font-semibold opacity-70  ${
-                          !!completeThis ? "line-through" : ""
-                        }`}
-                      >
-                        {reminders?.[0]?.task?.name}
-                      </span>
-                    </div>
+                    <ReminderShowComponent
+                      name={reminders?.[0]?.task?.name}
+                      completed={!!completeThis}
+                      date={date}
+                    />
                   )}
 
                   {reminders?.length - 1 > 0 && (
@@ -335,10 +307,18 @@ export default function Reminders() {
                     </div>
                   )}
                 </section>
-              </div>
+
+                <span data-lenght={lenght} className="w-4 h-2 bg-blue-500 absolute bottom-0 right-0 rounded-full hidden data-[lenght=true]:flex lg:data-[lenght=true]:hidden lg:hidden"/>
+              </button>
             );
           })}
       </CenterSection>
+
+      {dateSelected && (
+        <CenterSection className="flex flex-col gap-2 overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 rounded">
+          <ViewReminders date={dateSelected} />
+        </CenterSection>
+      )}
     </section>
   );
 }

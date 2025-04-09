@@ -9,7 +9,7 @@ import { motion } from "framer-motion";
 const ModalBackground = (props: HTMLAttributes<HTMLDivElement>) => {
   const { children, className } = props;
   const style = twMerge(
-    "fixed top-0 left-0 w-full h-screen overflow-auto px-4 flex flex-col bg-gray-50 dark:bg-zinc-950 backdrop-blur-[1px] z-20",
+    "fixed top-0 left-0 w-full h-screen overflow-auto px-4 flex flex-col bg-gray-50 dark:bg-zinc-950 backdrop-blur-[1px] z-60",
     className
   );
 

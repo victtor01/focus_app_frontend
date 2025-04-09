@@ -11,6 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { CgGym } from "react-icons/cg";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import { TbClockHour7Filled } from "react-icons/tb";
 import { TiThList } from "react-icons/ti";
@@ -91,15 +92,18 @@ export default function AllTasksList() {
         <h1 className={fontSaira}>Minhas tarefas</h1>
       </header>
 
-      <section className="flex flex-col border rounded-md shadow overflow-hidden dark:shadow-black dark:bg-zinc-900 border-zinc-200 bg-white w-full divide-y dark:divide-zinc-700 dark:border-zinc-800 divide-zinc-300">
+      <section className="flex flex-col border rounded-md shadow overflow-hidden dark:shadow-black dark:bg-zinc-950 border-zinc-200 bg-white w-full divide-y dark:divide-zinc-700 dark:border-zinc-800 divide-zinc-300">
         {tasks?.map((task: ITask) => {
           return (
             <Link
               key={task?.id}
               href={`?modal=edit-task&taskId=${task.id}`}
-              className="justify-between flex opacity-90 hover:opacity-100 hover:bg-zinc-50 hover:dark:bg-zinc-800"
+              className="justify-between flex opacity-90 hover:opacity-100 hover:bg-zinc-50 hover:dark:bg-zinc-900"
             >
-              <section className="flex items-center gap-5 p-2">
+              <section className="flex items-center gap-2 p-2">
+                <div className="grid place-items-center w-7 h-7 bg-zinc-100 dark:bg-zinc-800 rounded-md">
+                  <CgGym />
+                </div>
                 <div
                   className={`${fontSaira} text-lg text-gray-500 dark:text-zinc-200 font-semibold`}
                 >
